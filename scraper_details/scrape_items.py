@@ -57,8 +57,9 @@ async def scraper_items():
             with open('data/items.txt','w') as f:
                 f.write('\n'.join(scraper_tasks))
 
-start_time = time.time()
-loop = asyncio.get_event_loop()
-# loop.run_until_complete(scraper_items())
-loop.run_until_complete(scraper_pages())
-print(time.time() - start_time)
+async def scrape_items():
+    start_time = time.time()
+    loop = asyncio.get_event_loop()
+    # loop.run_until_complete(scraper_items())
+    loop.run_until_complete(scraper_pages())
+    print('scrap items',time.time() - start_time)

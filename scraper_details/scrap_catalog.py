@@ -33,10 +33,13 @@ async def scrape(url):
                 data['description'] = descript2
                 data['img_list'] = ['https://opt-drop.com'+img.get('src') for img in img_list]
                 data['category'] = soup.find('nav',class_='breadcrumbs').find_all('div',class_='breadcrumbs-i')[1].text.strip()
+
+                if data['name'] == '': data['name'] = ''
                 return data
 
     except Exception as e:
         print('some error ',url,'error id -',e)
+        return 'nothing here'
 
 
 
@@ -61,7 +64,7 @@ async def main():
     cursor.execute('''
     CREATE TABLE IF NOT EXISTS products (
     id INTEGER PRIMARY KEY,
-    name TEXT NOT NULL,
+    name TEXT,
     url TEXT NOT NULL,
     available BOOLEAN,
     category TEXT,
@@ -80,26 +83,33 @@ async def main():
     )
     ''')
     for item in data:
+        if item == 'nothing here':
+            continue
         # pprint(item)
-        cursor.execute('INSERT INTO products (name, url, available,category,description,price,img_one,img_two,img_three,img_four,img_five,img_six,img_seven,img_eight,img_nine,img_ten) VALUES (?,?, ?, ?, ?, ?, ?, ? ,? ,?, ? ,? ,?, ? ,? ,?)', (
-            item['name'],
-            item['url'],
-            item['available'],
-            item['category'],
-            ' '.join(item['description']),
-            item['price'],
-            item['img_list'][0] if len(item['img_list']) > 1 else '',
-            item['img_list'][1] if len(item['img_list']) > 2 else '',
-            item['img_list'][2] if len(item['img_list']) > 3 else '',
-            item['img_list'][3] if len(item['img_list']) > 4 else '',
-            item['img_list'][4] if len(item['img_list']) > 5 else '',
-            item['img_list'][5] if len(item['img_list']) > 6 else '',
-            item['img_list'][6] if len(item['img_list']) > 7 else '',
-            item['img_list'][7] if len(item['img_list']) > 8 else '',
-            item['img_list'][8] if len(item['img_list']) > 9 else '',
-            item['img_list'][9] if len(item['img_list']) > 10 else ''
+        # if item['name'] == None or item['name'] == '' or not item['name']:
+        try:
+            cursor.execute('INSERT INTO products (name, url, available,category,description,price,img_one,img_two,img_three,img_four,img_five,img_six,img_seven,img_eight,img_nine,img_ten) VALUES (?,?, ?, ?, ?, ?, ?, ? ,? ,?, ? ,? ,?, ? ,? ,?)', (
+                item['name'],
+                item['url'],
+                item['available'],
+                item['category'],
+                ' '.join(item['description']),
+                item['price'],
+                item['img_list'][0] if len(item['img_list']) > 1 else '',
+                item['img_list'][1] if len(item['img_list']) > 2 else '',
+                item['img_list'][2] if len(item['img_list']) > 3 else '',
+                item['img_list'][3] if len(item['img_list']) > 4 else '',
+                item['img_list'][4] if len(item['img_list']) > 5 else '',
+                item['img_list'][5] if len(item['img_list']) > 6 else '',
+                item['img_list'][6] if len(item['img_list']) > 7 else '',
+                item['img_list'][7] if len(item['img_list']) > 8 else '',
+                item['img_list'][8] if len(item['img_list']) > 9 else '',
+                item['img_list'][9] if len(item['img_list']) > 10 else ''
 
-        ))
+
+                ))
+        except:
+            print(item)
     connection.commit()
     connection.close()
 

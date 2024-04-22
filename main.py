@@ -1,8 +1,33 @@
+import asyncio
+import os
+from datetime import datetime
 # from scraper_details import scrap_categories
-# from scraper_details import scrape_items
-
-# takes urls from catalog make request for each one and write everything to db
+from scraper_details import scrape_items
 from scraper_details import scrap_catalog
-scrap_catalog.scraping_catalogue()
-
 from scraper_details import converter
+from dotenv import load_dotenv
+
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
+
+
+def start():
+    print('inteval scrapint begin')
+    # asyncio.run(scrape_items.scrape_items())
+    scrap_catalog.scraping_catalogue()
+    converter.convert()
+    print(datetime.now())
+    os.remove('db/my_database.db')
+
+
+async def main():
+    scheduler = AsyncIOScheduler()
+    load_dotenv('config')
+
+    scheduler.add_job(start, 'interval', hours=max(1, int(os.getenv('HOW_OFTEN'))))
+    scheduler.start()
+
+
+if __name__ == '__main__':
+    loop = asyncio.new_event_loop()
+    loop.create_task(main())
+    loop.run_forever()
