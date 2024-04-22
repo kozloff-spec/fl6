@@ -47,7 +47,7 @@ def convert():
         currencyId = SubElement(offer, 'currencyId')
         currencyId.text = 'UAH'
         categoryId = SubElement(offer, 'categoryId')
-        categoryId.text = 'none'
+        categoryId.text = str(listOfCat.index(user[3]))
         price = SubElement(offer, 'price')
         price.text = str(user[6])
         for i in range(7,17):
