@@ -2,12 +2,20 @@ import asyncio
 import aiohttp
 from bs4 import BeautifulSoup
 
+import time
+
 async def scrap_page(url:str):
     async with aiohttp.ClientSession() as session:
         async with session.get(url) as resp:
             body = await resp.text()
-            with open('html.html','w',encoding='utf-8') as f:
-                f.write(body)
+            soup = BeautifulSoup(body,'lxml')
+            catList = []
+            catalog = soup.find('ul','catalogGrid')
+            catalogCard = catalog.find_all('div',class_='catalogCard-title')
+            for card in catalogCard:
+                catList.append(f'https://opt-drop.com{card.find("a").get("href")}')
+            with open('data/catalog.txt','a') as f:
+                f.write('\n'.join(catList)+'\n')
 
 async def scraper_pages():
     tasks = []
@@ -15,7 +23,6 @@ async def scraper_pages():
         for line in f:
             task = asyncio.create_task(scrap_page(line.strip()))
             tasks.append(task)
-            break
         await asyncio.gather(*tasks)
 
 async def scrap(url:str):
@@ -48,7 +55,8 @@ async def scraper_items():
             with open('data/items.txt','w') as f:
                 f.write('\n'.join(scraper_tasks))
 
-
+start_time = time.time()
 loop = asyncio.get_event_loop()
 # loop.run_until_complete(scraper_items())
-loop.run_until_complete(scraper_pages())
+# loop.run_until_complete(scraper_pages())
+print(time.time() - start_time)
