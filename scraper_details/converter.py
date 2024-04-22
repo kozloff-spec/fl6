@@ -22,7 +22,7 @@ def convert():
     phone.text = os.getenv('phone')
 
     r = str(random.randint(10000000,99999999))
-    listOfCat = ['Новинки','Для дома и сада',"Крастоа и здоровье","Товары для детей","Отдый и туризм","Товары для спорта","Одежда, обувь и аксесуары","Автотовары","Зоотовары","Техника и электроника","Лсвещение","Охранные системы и сгнализация","Системы сидеонаблюдения","Громкоговорители","Детекторы бакнот","Подарки","Новый год и Рождество","Дополнитьельный раздел",]
+    listOfCat = ['Новинки','Для дома и сада',"Красота и здоровье","Товары для детей","Отдый и туризм","Товары для спорта","Одежда, обувь и аксессуары","Автотовары","Зоотовары","Техника и электроника","Лсвещение","Охранные системы и сигнализации","Системы видеонаблюдения","Громкоговорители","Детекторы банкнот","Подарки","Новый год и Рождество","Дополнитьельный раздел",'Освещение','Отдых и туризм']
     categories = SubElement(shop, 'categories')
     for i in range(len(listOfCat)):
         cat = SubElement(categories, 'category',attrib={'id':str(i)})
@@ -41,13 +41,13 @@ def convert():
         name = SubElement(offer, 'name')
         name.text = user[1]
         vendorCode = SubElement(offer, 'vendorCode')
-        vendorCode.text = '111938'
+        vendorCode.text = str(user[17])
         offerUrl = SubElement(offer, 'url')
         offerUrl.text = str(user[2])
         currencyId = SubElement(offer, 'currencyId')
         currencyId.text = 'UAH'
         categoryId = SubElement(offer, 'categoryId')
-        categoryId.text = str(listOfCat.index(user[3]))
+        categoryId.text = str(listOfCat.index(user[4]))
         price = SubElement(offer, 'price')
         price.text = str(user[6])
         for i in range(7,17):
@@ -58,8 +58,8 @@ def convert():
         vendor.text = 'opt-drop'
         description = SubElement(offer, 'description')
         description.text = user[5]
-        quantity_in_stock = SubElement(offer, 'quantity_in_stock')
-        quantity_in_stock.text = '15'
+        # quantity_in_stock = SubElement(offer, 'quantity_in_stock')
+        # quantity_in_stock.text = '15'
 
 
     connection.commit()

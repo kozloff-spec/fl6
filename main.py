@@ -19,6 +19,7 @@ def start():
     os.remove('db/my_database.db')
 
 
+
 async def main():
     scheduler = AsyncIOScheduler()
     load_dotenv('config')
@@ -26,6 +27,7 @@ async def main():
     scheduler.add_job(start, 'interval', hours=max(1, int(os.getenv('HOW_OFTEN'))))
     scheduler.start()
 
+start()
 
 if __name__ == '__main__':
     loop = asyncio.new_event_loop()

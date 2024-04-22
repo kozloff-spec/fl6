@@ -33,6 +33,7 @@ async def scrape(url):
                 data['description'] = descript2
                 data['img_list'] = ['https://opt-drop.com'+img.get('src') for img in img_list]
                 data['category'] = soup.find('nav',class_='breadcrumbs').find_all('div',class_='breadcrumbs-i')[1].text.strip()
+                data['article'] = soup.find('div',class_='product-header__code').text.split(':')[1]
 
                 if data['name'] == '': data['name'] = ''
                 return data
@@ -79,16 +80,18 @@ async def main():
     img_seven TEXT,
     img_eight TEXT,
     img_nine TEXT,
-    img_ten TEXT
+    img_ten TEXT,
+    article TEXT
     )
     ''')
+    print('created')
     for item in data:
         if item == 'nothing here':
             continue
         # pprint(item)
         # if item['name'] == None or item['name'] == '' or not item['name']:
         try:
-            cursor.execute('INSERT INTO products (name, url, available,category,description,price,img_one,img_two,img_three,img_four,img_five,img_six,img_seven,img_eight,img_nine,img_ten) VALUES (?,?, ?, ?, ?, ?, ?, ? ,? ,?, ? ,? ,?, ? ,? ,?)', (
+            cursor.execute('INSERT INTO products (name, url, available,category,description,price,img_one,img_two,img_three,img_four,img_five,img_six,img_seven,img_eight,img_nine,img_ten,article) VALUES (?,?,?, ?, ?, ?, ?, ?, ? ,? ,?, ? ,? ,?, ? ,? ,?)', (
                 item['name'],
                 item['url'],
                 item['available'],
@@ -104,12 +107,13 @@ async def main():
                 item['img_list'][6] if len(item['img_list']) > 7 else '',
                 item['img_list'][7] if len(item['img_list']) > 8 else '',
                 item['img_list'][8] if len(item['img_list']) > 9 else '',
-                item['img_list'][9] if len(item['img_list']) > 10 else ''
+                item['img_list'][9] if len(item['img_list']) > 10 else '',
+                item['article']
 
 
                 ))
         except:
-            print(item)
+            print('err while appending this item - ',item)
     connection.commit()
     connection.close()
 
