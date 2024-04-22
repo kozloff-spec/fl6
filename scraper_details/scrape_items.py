@@ -19,11 +19,13 @@ async def scrap_page(url:str):
 
 async def scraper_pages():
     tasks = []
+    with open('data/catalog.txt', 'w') as f:
+        f.write('')
     with open('data/items.txt','r') as f:
-        for line in f:
-            task = asyncio.create_task(scrap_page(line.strip()))
-            tasks.append(task)
-        await asyncio.gather(*tasks)
+            for line in f:
+                task = asyncio.create_task(scrap_page(line.strip()))
+                tasks.append(task)
+            await asyncio.gather(*tasks)
 
 async def scrap(url:str):
     async with aiohttp.ClientSession() as session:
@@ -58,5 +60,5 @@ async def scraper_items():
 start_time = time.time()
 loop = asyncio.get_event_loop()
 # loop.run_until_complete(scraper_items())
-# loop.run_until_complete(scraper_pages())
+loop.run_until_complete(scraper_pages())
 print(time.time() - start_time)
