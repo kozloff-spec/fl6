@@ -13,10 +13,15 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 def start():
     print('inteval scrapint begin')
     # asyncio.run(scrape_items.scrape_items())
-    scrap_catalog.scraping_catalogue()
+    try:
+        # os.remove('db/my_database.db')
+        pass
+    except :
+        pass
+    for i in range(1):
+        scrap_catalog.scraping_catalogue()
     converter.convert()
     print(datetime.now())
-    os.remove('db/my_database.db')
 
 
 
